@@ -1,5 +1,7 @@
 package server;
 
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.*;
 
 public class Server {
@@ -27,6 +29,13 @@ public class Server {
 			
 			System.out.println("Server Connection Successful \\(`-´)/");
 			System.out.println(s.toString());
+			
+			OutputStream stream = s.getOutputStream();
+			byte[] a = {6};
+			
+			while(true) {	
+				stream.write(a);
+			}
 			
 			
 			
