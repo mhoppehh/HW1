@@ -10,7 +10,7 @@ import java.util.stream.IntStream;
 
 public class Server {
 	
-	int STARTING_PORT 	= 8080;
+	int STARTING_PORT 	= 10;
 	int PORT_INCREMENT 	= 10; 
 	InetAddress DEFAULT_ADDRESS = InetAddress.getByName("localhost");
 	
@@ -21,10 +21,8 @@ public class Server {
 	ArrayList<Socket> openSockets;
 	int nextPort;
 	
-	public Server() throws IOException {
+	public Server() throws IOException, InterruptedException {
 		init();
-		
-		openSocket();
 		
 		run();
 		
@@ -37,8 +35,10 @@ public class Server {
 		openSockets = new ArrayList<Socket>();
 	}
 	
-	private void run() throws IOException {
+	private void run() throws IOException, InterruptedException {
 		while(true) {
+			openSocket();
+			
 			scanMessages();
 		}
 	}
@@ -48,32 +48,43 @@ public class Server {
 			InputStream stream = s.getInputStream();
 			byte[] data = new byte[156];
 		
-			stream.read(data);
-		
-			if(sum(data) > 0){
+			if(stream.available() > 0) {
+				stream.read(data);
 				System.out.println(new String(data));
-			}	
+			}
 		}
 	}
 	
-	private void openSocket() throws IOException {
-			nextSocket = new ServerSocket(nextPort, 0, DEFAULT_ADDRESS);
+	private void openSocket() throws InterruptedException{
+		Socket s = null;
+		try {
 		
-			Socket s = null;
+			nextSocket = new ServerSocket(nextPort, 0, DEFAULT_ADDRESS);
+			nextSocket.setSoTimeout(50); 
 			
 			s = nextSocket.accept();
 			
-			if(s != null) {
-			
-				System.out.println("Server Connection Successful \\(`-´)/");
-				System.out.println(s.toString());
-			
-				openSockets.add(s);
-				numberConnected++;
+			socketConnected(s);
+			} catch (java.net.BindException b) {
 				nextPort += PORT_INCREMENT;
-				nextSocket = null;
+			} catch (SocketException se) {
+			} catch (IOException e) {
+				if(s != null)
+					socketConnected(s);
+				Thread.sleep(50);
 			}
+		
 			
+	}
+	
+	private void socketConnected(Socket s) {
+		System.out.println("Server Connection Successful \\(`-´)/");
+		System.out.println(s.toString());
+		
+		openSockets.add(s);
+		numberConnected++;
+		nextPort += PORT_INCREMENT;
+		nextSocket = null;
 	}
 	
 	private void close() throws IOException {
