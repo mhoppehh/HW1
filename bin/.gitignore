@@ -1,3 +1,7 @@
 /client/
-/server/
 /lab/
+/Client$ServerScanner.class
+/Client.class
+/Server$ClientScanner.class
+/Server$ClientTuple.class
+/Server.class
