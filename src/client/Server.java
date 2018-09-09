@@ -1,4 +1,4 @@
-package server;
+package client;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +9,10 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class Server {
+	
+	public static void main(String [] args) throws IOException, InterruptedException {
+		Server s = new Server();
+	}
 	
 	int STARTING_PORT 	= 10;
 	int PORT_INCREMENT 	= 10; 

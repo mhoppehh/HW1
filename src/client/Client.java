@@ -8,6 +8,10 @@ import java.util.Scanner;
 
 public class Client {
 	
+	public static void main(String args[]) throws UnknownHostException, IOException {
+		Client c = new Client();
+	}
+	
 	Socket socket;
 	
 	Scanner scanner;
